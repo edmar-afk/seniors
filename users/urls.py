@@ -5,6 +5,9 @@ urlpatterns = [
     
     path('mainLogin', views.mainLogin, name='mainLogin'),
     path('mainDashboard', views.mainDashboard, name='mainDashboard'),
+    path('inputData', views.inputData, name='inputData'),
+    path('approveAccount', views.approveAccount, name='approveAccount'),
+    
     path('<int:user_id>/removeUser/', views.removeUser, name='removeUser'),
     path('acceptUser/<int:user_id>/', views.acceptUser, name='acceptUser'),
     path('declineUser/<int:user_id>/', views.declineUser, name='declineUser'),

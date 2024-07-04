@@ -11,9 +11,19 @@ from .models import Profile
 def mainLogin(request):
     return render(request, 'main/mainLogin.html')
 
-def mainDashboard(request):
-    users = User.objects.all().order_by('-id')
+
+
+def approveAccount(request):
+    seniors = User.objects.all().order_by('-id')
     
+    context = {
+        'seniors': seniors
+    }
+    
+    return render(request, 'main/approve.html', context)
+
+
+def inputData(request):
     
     if request.method == 'POST':
         profile_pic = request.FILES.get('profile_pic') 
@@ -45,7 +55,14 @@ def mainDashboard(request):
         else:
             messages.error(request, 'Password does not match.')
             return redirect(request.META.get('HTTP_REFERER'))
-        
+
+    
+    return render(request, 'main/inputData.html')
+
+
+def mainDashboard(request):
+    users = User.objects.all().order_by('-id')
+    
     context = {
         'users': users
     }
@@ -125,7 +142,7 @@ def acceptUser(request, user_id):
     user.is_staff = True
     user.save()
     # You can redirect to a success page or to the same page
-    messages.success(request, 'User Accepted')
+    messages.success(request, 'Senior Citizen Approved')
     return redirect(request.META.get('HTTP_REFERER'))
 
 def declineUser(request, user_id):
@@ -133,7 +150,7 @@ def declineUser(request, user_id):
     user.is_staff = False
     user.save()
     # You can redirect to a success page or to the same page
-    messages.success(request, 'User Declined')
+    messages.error(request, 'Senior Citizen Rejected')
     return redirect(request.META.get('HTTP_REFERER'))
 
 def logoutUser(request):
