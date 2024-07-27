@@ -1,0 +1,209 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Dashboard</title>
+
+		{% tailwind_css %}
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+			rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+			integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer" />
+	</head>
+	<body>
+		{% include 'includes/adminSidebar.html' %}
+
+		<div class="p-4 sm:ml-64">
+			<div class="flex flex-col">
+				<p class="mt-4 mb-4 font-bold text-2xl text-gray-600">Add event for Senior Citizens</p>
+
+				{% for message in messages %} {% if message.level_tag == 'success' %}
+				<p class="text-center text-green-800 font-bold mt-4 mb-4 text-3xl">{{message}}</p>
+				{% else %}
+				<p class="text-center text-red-600 font-bold mt-4 mb-4 text-3xl">{{message}}</p>
+				{%endif%} {% endfor %}
+			</div>
+<form action="{% url 'send_sms_via_email' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="phone_number" placeholder="Recipient Phone Number" required>
+    <input type="text" name="message" placeholder="Message" required>
+    <input type="text" name="carrier_domain" placeholder="Carrier Domain" required>
+    <button type="submit">Send SMS</button>
+</form>
+
+			<button
+				data-modal-target="default-modal"
+				data-modal-toggle="default-modal"
+				class="block text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+				type="button">
+				<i
+					class="fa fa-user-plus"
+					aria-hidden="true"></i>
+				Add event
+			</button>
+
+			<div class="my-14 text-left">
+				{% for list in events %}
+				<section class="mb-4 border bg-green-900 text-white p-4 rounded-lg max-w-full">
+					<div class="mx-auto mb-6">
+						<div class="card md:flex max-w-lg">
+							<div class="w-20 h-20 mx-auto mb-6 mr-6 flex-shrink-0">
+								<img
+									class="object-cover rounded-full"
+									src="https://tailwindflex.com/public/images/user.png" />
+							</div>
+							<div class="flex-grow text-left ml-4">
+								<p class="font-bold">Posted an Event</p>
+								<h3 class="text-md heading">DSWD</h3>
+								<p class="text-xs font-semibold">Date held: {{ list.date_held|date:"m-d-Y" }}</p>
+
+								<p class="mt-2 mb-3">{{list.description}}</p>
+								<div class="flex flex-wrap items-center">
+									<a
+										href="#"
+										class="bg-gray-200 text-gray-900 border cursor-pointer hover:scale-110 duration-300 px-3 mx-2 py-1.5 rounded-lg text-sm">
+										{{list.likes.count}}
+										<i
+											class="fa fa-users mr-2"
+											aria-hidden="true"></i>
+										Seniors want to attend
+									</a>
+
+									<a
+										href="{% url 'removeEvent' list.id %}"
+										class="bg-red-600 hover:scale-110 duration-300 text-white mx-2 border px-3 py-1.5 rounded-lg text-sm">
+										<i
+											class="fa fa-trash"
+											aria-hidden="true"></i>
+										Remove Event
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				{% endfor %}
+			</div>
+			<div
+				id="default-modal"
+				tabindex="-1"
+				aria-hidden="true"
+				class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+				<div class="relative p-4 w-full max-w-2xl max-h-full">
+					<!-- Modal content -->
+					<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+						<!-- Modal header -->
+						<div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+							<h3 class="text-xl font-semibold text-gray-900 dark:text-white">Add Senior Citizen</h3>
+							<button
+								type="button"
+								class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+								data-modal-hide="default-modal">
+								<svg
+									class="w-3 h-3"
+									aria-hidden="true"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 14 14">
+									<path
+										stroke="currentColor"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+								</svg>
+								<span class="sr-only">Close modal</span>
+							</button>
+						</div>
+						<!-- Modal body -->
+						<form
+							method="post"
+							enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="p-4 md:p-5 space-y-4">
+								<div class="mb-5">
+									<label
+										for="date"
+										class="mb-3 block text-base font-medium text-[#07074D]">
+										Event Date
+									</label>
+									<input
+										type="date"
+										name="date"
+										id="date"
+										required
+										placeholder="Enter your Date of Birth"
+										class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+								</div>
+
+								<div class="mb-5 pt-3">
+									<label
+										for="eventname"
+										required
+										class="mb-3 block text-base font-medium text-[#07074D]">
+										Event Name
+									</label>
+									<div class="-mx-3 flex flex-wrap">
+										<div class="w-full px-3 sm:w-1/2">
+											<div class="mb-5">
+												<input
+													type="text"
+													name="eventName"
+													id="purok"
+													placeholder="Senior Meeting, etc.."
+													class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mb-5 pt-3">
+									<label
+										for="message"
+										class="block mb-2 text-sm font-medium text-gray-900">
+										Event Description
+									</label>
+									<textarea
+										id="message"
+										name="description"
+										rows="4"
+										required
+										class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-green-500 focus:border-green-500"
+										placeholder="Write your event description here..."></textarea>
+								</div>
+							</div>
+							<!-- Modal footer -->
+							<div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+								<input
+									type="submit"
+									name="submit"
+									type="button"
+									class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" />
+
+								<button
+									data-modal-hide="default-modal"
+									type="button"
+									class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-4 focus:ring-gray-100">
+									Cancel
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Main modal -->
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+	</body>
+</html>

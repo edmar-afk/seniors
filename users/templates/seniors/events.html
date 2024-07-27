@@ -1,0 +1,90 @@
+{% load static tailwind_tags %}<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Dashboard</title>
+
+		{% tailwind_css %}
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+			rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+			integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer" />
+	</head>
+	<body>
+		{% include 'includes/seniorSidebar.html' %}
+
+		<div class="p-4 sm:ml-64">
+			<div class="flex flex-col">
+				<p class="mt-4 mb-4 font-bold text-2xl text-gray-600">View upcoming events below</p>
+
+				{% for message in messages %} {% if message.level_tag == 'success' %}
+				<p class="text-center text-green-800 font-bold mt-4 mb-4 text-3xl">{{message}}</p>
+				{% else %}
+				<p class="text-center text-red-600 font-bold mt-4 mb-4 text-3xl">{{message}}</p>
+				{%endif%} {% endfor %}
+			</div>
+
+			<div class="my-14 text-left">
+				{% for list in events %}
+				<section class="mb-4 border bg-green-900 text-white p-4 rounded-lg max-w-full">
+					<div class="mx-auto mb-6">
+						<div class="card md:flex max-w-lg">
+							<div class="w-20 h-20 mx-auto mb-6 mr-6 flex-shrink-0">
+								<img
+									class="object-cover rounded-full"
+									src="https://tailwindflex.com/public/images/user.png" />
+							</div>
+							<div class="flex-grow text-left ml-4">
+								<p class="font-bold">
+									Posted an Event -
+									<span class="text-xs">{{list.likes.count}} seniors attended</span>
+								</p>
+								<h3 class="text-md heading">DSWD</h3>
+								<p class="text-xs font-semibold">Date held: {{ list.date_held|date:"m-d-Y" }}</p>
+
+								<p class="mt-2 mb-3">{{list.description}}</p>
+								<div class="flex flex-wrap items-center">
+									{% if request.user in list.likes.all %}
+									<a
+										href="{% url 'dislike_event' list.id %}"
+										class="bg-red-200 text-red-900 border cursor-pointer hover:scale-110 duration-300 px-3 mx-2 py-1.5 rounded-lg text-sm">
+										I don't want to attend
+									</a>
+									{% else %}
+									<a
+										href="{% url 'like_event' list.id %}"
+										class="bg-gray-200 text-gray-900 border cursor-pointer hover:scale-110 duration-300 px-3 mx-2 py-1.5 rounded-lg text-sm">
+										I want to attend
+									</a>
+									{% endif %}
+
+									<a
+										href="{% url 'removeEvent' list.id %}"
+										class="bg-red-600 hover:scale-110 duration-300 text-white mx-2 border px-3 py-1.5 rounded-lg text-sm">
+										<i
+											class="fa fa-trash"
+											aria-hidden="true"></i>
+										Remove Event
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				{% endfor %}
+			</div>
+		</div>
+
+		<!-- Main modal -->
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+	</body>
+</html>

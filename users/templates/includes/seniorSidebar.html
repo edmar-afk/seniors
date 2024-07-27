@@ -1,5 +1,4 @@
-{% load static %}
-<button
+{% load static %}<button
 	data-drawer-target="logo-sidebar"
 	data-drawer-toggle="logo-sidebar"
 	aria-controls="logo-sidebar"
@@ -31,43 +30,26 @@
 				src="{% static 'img/logo1.jpg' %}"
 				class="h-14 rounded-full"
 				alt="Logo" />
-			<span class="self-center text-md font-semibold whitespace-nowrap">Lapuyan Senior</span>
+			<span class="self-center text-md font-semibold whitespace-nowrap">Lapuyan Senior </span>
 		</a>
 		<ul class="space-y-2 font-medium">
 			<li>
 				<a
-					href="{% url 'approveAccount' %}"
+					href="{% url 'seniorDashboard' %}"
 					class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
 					<i class="fas fa-user-check w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"></i>
 
-					<span class="ms-3">Approve Account</span>
+					<span class="ms-3">Personal Information</span>
 				</a>
 			</li>
+			
 			<li>
 				<a
-					href="{% url 'inputData' %}"
+					href="{% url 'seniorsEvent' %}"
 					class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
 					<i
-						class="fa fa-database flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
+						class="fa fa-calendar flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
 						aria-hidden="true"></i>
-
-					<span class="flex-1 ms-3 whitespace-nowrap">Input Data</span>
-				</a>
-			</li>
-			<li>
-				<a
-					href="{% url 'mainDashboard' %}"
-					class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
-					<i class="fas fa-book-reader w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"></i>
-
-					<span class="flex-1 ms-3 whitespace-nowrap">Manage Data</span>
-				</a>
-			</li>
-			<li>
-				<a
-					href="{% url 'events' %}"
-					class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
-					<i class="fas fa-calendar w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"></i>
 
 					<span class="flex-1 ms-3 whitespace-nowrap">Events</span>
 				</a>

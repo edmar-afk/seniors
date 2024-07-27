@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.contrib.auth import authenticate, login as auth_login
-from .models import Profile
+from .models import Profile, SeniorResponse, Event
+from django.utils import timezone
 # Create your views here.
 
 def mainLogin(request):
@@ -126,6 +127,18 @@ def register(request):
     return render(request, 'register.html')
 
 
+
+def seniorResponse(request):
+    
+    if request.method == 'POST':
+        message = request.POST['sender']
+        
+        new_message = SeniorResponse.objects.create(sender=request.user, message=message, date_submitted=timezone.now())
+        new_message.save()
+        messages.success(request, 'Your Message is Delivered')
+    
+    return render(request, 'seniors/response.html')
+
 def seniorDashboard(request):
     return render(request, 'seniors/index.html')
 
@@ -136,6 +149,10 @@ def removeUser(request, user_id):
     messages.success(request, 'User Removed')
     return redirect(request.META.get('HTTP_REFERER'))
 
+def removeEvent(request, event_id):
+    Event.objects.filter(id=event_id).delete()
+    messages.success(request, 'Event Removed')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 def acceptUser(request, user_id):
     user = User.objects.get(pk=user_id)
@@ -157,3 +174,55 @@ def logoutUser(request):
     auth.logout(request)
     messages.success(request, "Logged out Successfully!")
     return redirect('homepage')
+
+
+def event(request):
+    events = Event.objects.all().order_by('-id')
+    
+    if request.method == 'POST':
+        event = request.POST['eventName']
+        date = request.POST['date']
+        description = request.POST['description']
+        
+        new_event = Event.objects.create(name=event, date_held=date, description=description)
+        messages.success(request, 'Event successfully added')
+        new_event.save()
+    
+    context = {
+        'events': events
+    }
+    return render(request, 'main/events.html', context)
+
+def seniorsEvent(request):
+    events = Event.objects.all().order_by('-id')
+    
+    if request.method == 'POST':
+        event = request.POST['eventName']
+        date = request.POST['date']
+        description = request.POST['description']
+        
+        new_event = Event.objects.create(name=event, date_held=date, description=description)
+        messages.success(request, 'Event successfully added')
+        new_event.save()
+    
+    context = {
+        'events': events
+    }
+    return render(request, 'seniors/events.html', context)
+
+def likeEvent(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    event.likes.add(request.user)
+    event.save()
+    messages.success(request, 'Event attended')
+    return redirect(request.META.get('HTTP_REFERER'))
+
+def dislikeEvent(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    event.likes.remove(request.user)
+    event.save()
+    messages.success(request, 'Event not attended')
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+

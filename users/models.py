@@ -17,3 +17,17 @@ class Profile(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+
+class Event(models.Model):
+    name = models.CharField(max_length=250)
+    description = models.TextField()
+    date_held = models.DateTimeField()
+    likes = models.ManyToManyField(User, blank=True, null=True)
+    
+
+
+class SeniorResponse(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    date_submitted = models.DateTimeField()
